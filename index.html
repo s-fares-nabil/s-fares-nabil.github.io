@@ -1022,7 +1022,6 @@
         { label: 'Contact', key: 'contact', desc: 'scrolls to Contact section' },
         { label: 'GitHub', key: 'github', desc: 'opens in new tab' },
         { label: 'LinkedIn', key: 'linkedin', desc: 'opens in new tab' },
-        { label: 'Close', key: 'close', desc: 'Exit the terminal' },
       ];
       items.forEach(item => {
         const btn = document.createElement('button');
@@ -1043,7 +1042,6 @@
         contact: 'contact', github: 'github',
         linkedin: 'contact',
       };
-      if (key === 'close') return;
       if (key === 'github') { window.open('https://github.com/s-fares-nabil', '_blank'); return; }
       if (key === 'linkedin') { window.open('https://www.linkedin.com/in/fares-elsherif-123945378', '_blank'); return; }
       const id = targets[key];
