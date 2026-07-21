@@ -1060,6 +1060,14 @@
       termHint.classList.remove('show');
     }
 
+    document.addEventListener('click', (e) => {
+      if (termOpen && !terminal.contains(e.target) && e.target.id !== 'see-my-work' && e.target.id !== 'term-launcher' && !e.target.closest('#see-my-work') && !e.target.closest('#term-launcher')) {
+        termOpen = false;
+        terminal.classList.remove('open');
+        termHint.classList.remove('show');
+      }
+    });
+
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' && termOpen) {
         e.preventDefault();
