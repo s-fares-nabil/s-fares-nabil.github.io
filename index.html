@@ -11,6 +11,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
 
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <script>
     tailwind.config = {
       theme: {
@@ -89,6 +90,238 @@
     .stagger-2 { animation-delay: 0.2s; animation-fill-mode: both; }
     .stagger-3 { animation-delay: 0.3s; animation-fill-mode: both; }
     .stagger-4 { animation-delay: 0.4s; animation-fill-mode: both; }
+
+    .theme-toggle {
+      cursor: pointer; background: none; border: none; padding: 8px;
+      border-radius: 8px; color: #64748B; transition: color 0.2s, background 0.2s;
+    }
+    .theme-toggle:hover { color: #2563EB; background: #F1F5F9; }
+
+    .dark body { background: #0F172A; color: #F1F5F9; }
+    .dark .bg-white { background: #1E293B !important; }
+    .dark .bg-slate-50 { background: #1E293B !important; }
+    .dark .bg-slate-50\/70 { background: rgba(10, 15, 30, 0.7) !important; }
+    .dark .bg-slate-50\/50 { background: rgba(15, 23, 42, 0.5) !important; }
+    .dark .bg-white\/80 { background: rgba(15, 23, 42, 0.85) !important; }
+    .dark .bg-slate-100 { background: #334155 !important; }
+    .dark .bg-accent-50 { background: #1E3A5F !important; }
+    .dark .bg-accent-50\/50 { background: rgba(30, 58, 95, 0.5) !important; }
+    .dark .bg-accent-100 { background: #1E40AF !important; }
+    .dark .bg-amber-50 { background: #3B2F10 !important; }
+    .dark .bg-emerald-50 { background: #0F3D2A !important; }
+    .dark .text-midnight { color: #FFFFFF !important; }
+    .dark .text-slate-500 { color: #E2E8F0 !important; }
+    .dark .text-slate-600 { color: #FFFFFF !important; }
+    .dark .text-slate-400 { color: #FFFFFF !important; }
+    .dark .text-slate-700 { color: #FFFFFF !important; }
+    .dark .text-slate-300 { color: #CBD5E1 !important; }
+    .dark .border-slate-200 { border-color: #FFFFFF !important; }
+    .dark .border-slate-300 { border-color: #E2E8F0 !important; }
+    .dark .border-accent-200 { border-color: #FFFFFF !important; }
+    .dark .border-accent-300 { border-color: #FFFFFF !important; }
+    .dark .border-amber-200 { border-color: #FFFFFF !important; }
+    .dark .photo-ring { box-shadow: 0 0 0 4px #1E293B, 0 0 0 6px #334155 !important; }
+    .dark .bg-gradient-to-br { background: linear-gradient(to bottom right, #0A0F1E, #0F172A, rgba(30, 58, 95, 0.2)) !important; }
+    .dark .hover\:bg-slate-50:hover { background: #334155 !important; }
+    .dark .hover\:bg-accent-50:hover { background: #1E3A5F !important; }
+    .dark .hover\:bg-emerald-50:hover { background: #0F3D2A !important; }
+    .dark .hover\:bg-amber-50:hover { background: #3B2F10 !important; }
+    .dark .hover\:bg-slate-100:hover { background: #334155 !important; }
+    .dark .hover\:bg-accent-100:hover { background: #1E40AF !important; }
+    .dark .hover\:border-accent-200:hover { border-color: #2563EB !important; }
+    .dark .hover\:border-accent-300:hover { border-color: #60A5FA !important; }
+    .dark .hover\:border-emerald-200:hover { border-color: #059669 !important; }
+    .dark .hover\:border-amber-200:hover { border-color: #D97706 !important; }
+    .dark .text-accent-500 { color: #60A5FA !important; }
+    .dark .text-accent-600 { color: #FFFFFF !important; }
+    .dark .text-accent-700 { color: #FFFFFF !important; }
+    .dark .hover\:text-accent-600:hover { color: #60A5FA !important; }
+    .dark .border-accent-100 { border-color: #1E40AF !important; }
+    .dark .badge-year { background: #1E293B !important; color: #94A3B8 !important; }
+    .dark .text-emerald-500 { color: #34D399 !important; }
+    .dark .text-emerald-600 { color: #34D399 !important; }
+    .dark .text-amber-600 { color: #FBBF24 !important; }
+    .dark .text-amber-700 { color: #FCD34D !important; }
+    .dark .shadow-lg { box-shadow: 0 10px 15px -3px rgba(0,0,0,0.4) !important; }
+    .dark .shadow-sm { box-shadow: 0 1px 3px 0 rgba(0,0,0,0.4) !important; }
+    .dark .theme-toggle:hover { color: #60A5FA; background: #334155; }
+
+    #terminal {
+      position: fixed; top: 0; left: 0; width: 100%; height: 340px;
+      background: #FFFFFF; color: #1E293B; font-family: 'Courier New', monospace;
+      font-size: 14px; z-index: 999; transform: translateY(-100%);
+      transition: transform 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+      border-bottom: 2px solid #3B82F6; box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      overflow: hidden;
+    }
+    .dark #terminal {
+      background: #0A0A0A; color: #3B82F6; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+    #terminal.open { transform: translateY(0); }
+    #terminal .term-header {
+      background: #F1F5F9; padding: 8px 14px; display: flex;
+      align-items: center; justify-content: space-between;
+      border-bottom: 1px solid #E2E8F0; user-select: none;
+    }
+    .dark #terminal .term-header { background: #1A1A1A; border-bottom-color: #333; }
+    #terminal .term-title { color: #64748B; font-size: 12px; font-weight: bold; }
+    .dark #terminal .term-title { color: #CCC; }
+    #terminal .term-dots { display: flex; gap: 6px; }
+    #terminal .term-dot { width: 10px; height: 10px; border-radius: 50%; }
+    #terminal .term-dot.red { background: #FF5F56; }
+    #terminal .term-dot.yellow { background: #FFBD2E; }
+    #terminal .term-dot.green { background: #27C93F; }
+    .term-menu { display: flex; flex-direction: column; gap: 6px; margin: 8px 0; }
+    .term-menu-item {
+      display: block; padding: 6px 12px; border: 1px solid #3B82F6; color: #3B82F6;
+      background: transparent; border-radius: 4px; cursor: pointer;
+      font-family: 'Courier New', monospace; font-size: 13px; text-align: left;
+      transition: background 0.2s, color 0.2s;
+    }
+    .dark .term-menu-item { border-color: #3B82F6; color: #3B82F6; }
+    .term-menu-item:hover { background: #3B82F6; color: #FFFFFF; }
+    .dark .term-menu-item:hover { background: #3B82F6; color: #0A0A0A; }
+    .term-menu-item .arrow { color: #3B82F6; margin-right: 8px; }
+    #terminal .term-body {
+      padding: 10px 14px; height: 252px; overflow-y: auto;
+      scrollbar-width: thin; scrollbar-color: #3B82F6 transparent;
+    }
+    #terminal .term-body::-webkit-scrollbar { width: 4px; }
+    #terminal .term-body::-webkit-scrollbar-thumb { background: #3B82F6; }
+    #terminal .term-line { margin-bottom: 4px; white-space: pre-wrap; word-break: break-all; line-height: 1.5; }
+    #terminal .term-line.prompt { color: #3B82F6; }
+    #terminal .term-line.output { color: #475569; }
+    .dark #terminal .term-line.output { color: #CCC; }
+    #terminal .term-line.error { color: #EF4444; }
+    #terminal .term-line.info { color: #3B82F6; }
+    #terminal .term-input-line {
+      display: flex; align-items: center; gap: 8px; padding: 6px 14px;
+      border-top: 1px solid #E2E8F0; background: #F8FAFC;
+    }
+    .dark #terminal .term-input-line { border-top-color: #333; background: #0A0A0A; }
+    #terminal .term-input-line span { color: #3B82F6; }
+    #terminal #term-input {
+      flex: 1; background: transparent; border: none; color: #1E293B;
+      font-family: 'Courier New', monospace; font-size: 14px; outline: none;
+    }
+    .dark #terminal #term-input { color: #3B82F6; }
+    .term-hint {
+      position: fixed; bottom: 20px; right: 20px; z-index: 50;
+      background: rgba(15, 23, 42, 0.85); color: #FFFFFF; padding: 6px 12px;
+      border-radius: 6px; font-family: 'Courier New', monospace;
+      font-size: 11px; opacity: 0; transition: opacity 0.5s;
+      pointer-events: none; border: 1px solid #3B82F6;
+    }
+    .dark .term-hint { background: rgba(0,0,0,0.75); color: #3B82F6; }
+    .term-hint.show { opacity: 0.8; }
+
+    #term-launcher {
+      position: fixed; bottom: 24px; right: 24px; z-index: 40;
+      width: 48px; height: 48px; border-radius: 50%;
+      background: #FFFFFF; border: 2px solid #3B82F6;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; transition: transform 0.3s, box-shadow 0.3s;
+      box-shadow: 0 4px 15px rgba(59, 130, 246, 0.2);
+    }
+    .dark #term-launcher { background: #0F172A; }
+    #term-launcher:hover { transform: scale(1.1); box-shadow: 0 6px 25px rgba(59, 130, 246, 0.35); }
+    #term-launcher svg { width: 22px; height: 22px; color: #3B82F6; }
+    @keyframes termPulse { 0%, 100% { box-shadow: 0 4px 15px rgba(59, 130, 246, 0.2); } 50% { box-shadow: 0 4px 25px rgba(59, 130, 246, 0.5); } }
+    #term-launcher { animation: termPulse 2s ease-in-out infinite; }
+
+    #particle-canvas {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      pointer-events: none; z-index: 0;
+    }
+
+    #project-modal {
+      position: fixed; inset: 0; z-index: 9999;
+      display: none; align-items: center; justify-content: center;
+      background: rgba(0,0,0,0.5); backdrop-filter: blur(4px);
+    }
+    #project-modal.open { display: flex; }
+    #project-modal .modal-panel {
+      background: #fff; color: #1E293B; width: 90%; max-width: 800px;
+      max-height: 85vh; border-radius: 12px; overflow: hidden;
+      display: flex; flex-direction: column;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+    .dark #project-modal .modal-panel { background: #0F172A; color: #E2E8F0; }
+    #project-modal .modal-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 20px; border-bottom: 1px solid #E2E8F0;
+    }
+    .dark #project-modal .modal-header { border-bottom-color: #1E293B; }
+    #project-modal .modal-header a {
+      font-size: 13px; color: #3B82F6; font-weight: 600;
+      display: inline-flex; align-items: center; gap: 6px;
+    }
+    #project-modal .modal-close {
+      width: 32px; height: 32px; border-radius: 8px; border: none;
+      background: #F1F5F9; color: #64748B; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; transition: background 0.2s;
+    }
+    .dark #project-modal .modal-close { background: #1E293B; color: #94A3B8; }
+    #project-modal .modal-close:hover { background: #E2E8F0; }
+    .dark #project-modal .modal-close:hover { background: #334155; }
+    #project-modal .modal-body {
+      padding: 20px; overflow-y: auto; flex: 1; line-height: 1.7;
+    }
+    #project-modal .modal-body .readme-heading {
+      font-weight: 700; margin: 18px 0 8px; color: #0F172A;
+    }
+    .dark #project-modal .modal-body .readme-heading { color: #F1F5F9; }
+    #project-modal .modal-body h1 { font-size: 22px; border-bottom: 1px solid #E2E8F0; padding-bottom: 6px; }
+    .dark #project-modal .modal-body h1 { border-bottom-color: #1E293B; }
+    #project-modal .modal-body h2 { font-size: 18px; }
+    #project-modal .modal-body h3 { font-size: 16px; }
+    #project-modal .modal-body p { margin: 8px 0; }
+    #project-modal .modal-body code {
+      background: #F1F5F9; padding: 2px 6px; border-radius: 4px;
+      font-size: 13px; font-family: 'Courier New', monospace;
+    }
+    .dark #project-modal .modal-body code { background: #1E293B; }
+    #project-modal .modal-body .readme-pre {
+      background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 8px;
+      padding: 14px; overflow-x: auto; margin: 10px 0; font-size: 13px;
+    }
+    .dark #project-modal .modal-body .readme-pre { background: #0A0A0A; border-color: #1E293B; }
+    #project-modal .modal-body .readme-pre code { background: transparent; padding: 0; }
+    #project-modal .modal-body .readme-img { max-width: 100%; border-radius: 8px; margin: 12px auto; display: block; }
+    #project-modal .modal-body a { color: #3B82F6; text-decoration: underline; }
+    #project-modal .modal-body ul, #project-modal .modal-body ol { padding-left: 22px; margin: 6px 0; }
+    #project-modal .modal-body li { margin: 3px 0; }
+    #project-modal .modal-body blockquote {
+      border-left: 4px solid #3B82F6; padding: 6px 14px; color: #475569; margin: 10px 0; background: #F8FAFC; border-radius: 0 6px 6px 0;
+    }
+    .dark #project-modal .modal-body blockquote { color: #94A3B8; background: #0F172A; }
+    #project-modal .modal-body hr { border: none; border-top: 1px solid #E2E8F0; margin: 18px 0; }
+    .dark #project-modal .modal-body hr { border-top-color: #1E293B; }
+    #project-modal .modal-body strong { font-weight: 700; }
+    #project-modal .modal-body .readme-table { border-collapse: collapse; width: 100%; margin: 10px 0; font-size: 13px; }
+    #project-modal .modal-body .readme-table th, #project-modal .modal-body .readme-table td {
+      border: 1px solid #E2E8F0; padding: 8px 12px; text-align: left;
+    }
+    .dark #project-modal .modal-body .readme-table th, .dark #project-modal .modal-body .readme-table td { border-color: #1E293B; }
+    #project-modal .modal-body .readme-table th { background: #F8FAFC; font-weight: 600; }
+    .dark #project-modal .modal-body .readme-table th { background: #1E293B; }
+    #project-modal .loading { text-align: center; padding: 40px; color: #94A3B8; }
+
+    .github-activity {
+      background: var(--bg-card, #fff); border: 1px solid var(--border, #E2E8F0);
+      border-radius: 12px; padding: 20px; transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .github-activity:hover {
+      transform: translateY(-3px); box-shadow: 0 10px 30px -10px rgba(0,0,0,0.15);
+    }
+    .github-activity .repo-name { font-weight: 600; color: var(--text-primary, #0F172A); }
+    .github-activity .repo-desc { font-size: 13px; color: var(--text-secondary, #64748B); margin-top: 4px; }
+    .github-activity .repo-meta { font-size: 11px; color: var(--text-tertiary, #94A3B8); margin-top: 8px; display: flex; gap: 12px; }
+    .dark .github-activity { background: #1E293B; border-color: #FFFFFF; }
+    .dark .github-activity .repo-name { color: #FFFFFF; }
+    .dark .github-activity .repo-desc { color: #E2E8F0; }
+    .dark .github-activity .repo-meta { color: #CBD5E1; }
   </style>
 </head>
 <body class="bg-white text-midnight">
@@ -107,12 +340,22 @@
 
         <div class="hidden md:flex items-center gap-1">
           <a href="#about" class="nav-link px-3 py-2 text-sm font-medium">About</a>
+          <a href="#experience" class="nav-link px-3 py-2 text-sm font-medium">Experience</a>
           <a href="#projects" class="nav-link px-3 py-2 text-sm font-medium">Projects</a>
           <a href="#skills" class="nav-link px-3 py-2 text-sm font-medium">Skills</a>
           <a href="#contact" class="nav-link px-3 py-2 text-sm font-medium">Contact</a>
+          <button id="theme-toggle" class="theme-toggle ml-2" aria-label="Toggle dark mode">
+            <svg id="sun-icon" class="w-5 h-5 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+            <svg id="moon-icon" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+          </button>
         </div>
 
-        <button id="mobile-menu-btn" type="button" class="md:hidden p-2 rounded-lg text-slate-500 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-accent-500 transition-colors duration-200" aria-label="Open menu" aria-expanded="false">
+        <div class="flex items-center gap-2">
+          <button id="theme-toggle-mobile" class="theme-toggle md:hidden" aria-label="Toggle dark mode">
+            <svg id="sun-icon-mobile" class="w-5 h-5 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+            <svg id="moon-icon-mobile" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+          </button>
+          <button id="mobile-menu-btn" type="button" class="md:hidden p-2 rounded-lg text-slate-500 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-accent-500 transition-colors duration-200" aria-label="Open menu" aria-expanded="false">
           <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
         </button>
       </div>
@@ -121,6 +364,7 @@
     <div id="mobile-menu" class="md:hidden hidden px-4 pb-4">
       <div class="flex flex-col gap-1 bg-white rounded-xl shadow-lg border border-slate-200 p-3">
         <a href="#about" class="px-3 py-2.5 text-sm font-medium text-slate-600 hover:text-accent-500 rounded-lg hover:bg-slate-50 transition-colors duration-200">About</a>
+        <a href="#experience" class="px-3 py-2.5 text-sm font-medium text-slate-600 hover:text-accent-500 rounded-lg hover:bg-slate-50 transition-colors duration-200">Experience</a>
         <a href="#projects" class="px-3 py-2.5 text-sm font-medium text-slate-600 hover:text-accent-500 rounded-lg hover:bg-slate-50 transition-colors duration-200">Projects</a>
         <a href="#skills" class="px-3 py-2.5 text-sm font-medium text-slate-600 hover:text-accent-500 rounded-lg hover:bg-slate-50 transition-colors duration-200">Skills</a>
         <a href="#contact" class="px-3 py-2.5 text-sm font-medium text-slate-600 hover:text-accent-500 rounded-lg hover:bg-slate-50 transition-colors duration-200">Contact</a>
@@ -133,6 +377,7 @@
     <!-- Hero -->
     <section class="min-h-screen flex items-center pt-16 relative overflow-hidden">
       <div class="absolute inset-0 bg-gradient-to-br from-slate-50 via-white to-accent-50/40 pointer-events-none" aria-hidden="true"></div>
+      <canvas id="particle-canvas" class="absolute top-0 left-0 w-full h-full pointer-events-none" style="z-index:0"></canvas>
       <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 w-full py-20 md:py-28 relative">
         <div class="grid md:grid-cols-5 gap-10 md:gap-16 items-center">
           <div class="md:col-span-3 order-2 md:order-1">
@@ -143,9 +388,12 @@
               <span class="text-accent-500">I build systems.</span>
             </h1>
 
-            <div class="mt-4 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-amber-50 border border-amber-200 text-amber-700 text-xs font-medium animate-fade-in stagger-2">
-              <span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
-              Seeking Summer 2026 Internship &mdash; Embedded Systems | Automation | IoT
+            <div class="mt-4 inline-flex flex-wrap items-center gap-x-2 gap-y-1 px-3 py-1.5 rounded-full bg-accent-50 border border-accent-200 text-accent-600 text-[11px] sm:text-xs font-medium animate-fade-in stagger-2">
+              <span class="whitespace-nowrap">Embedded Systems Trainee</span>
+              <span class="text-accent-300 hidden sm:inline">&middot;</span>
+              <span class="whitespace-nowrap">National Telecommunication Institute</span>
+              <span class="text-accent-300 hidden sm:inline">&middot;</span>
+              <span class="whitespace-nowrap">Summer 2026</span>
             </div>
 
             <p class="mt-4 text-lg md:text-xl text-slate-500 font-heading font-medium animate-fade-in stagger-2">
@@ -157,11 +405,11 @@
             </p>
 
             <div class="mt-8 flex flex-wrap gap-3 animate-fade-in stagger-4">
-              <a href="#about" class="inline-flex items-center px-5 py-2.5 rounded-lg bg-midnight text-white font-medium text-sm hover:bg-midnight-light transition-colors duration-200 cursor-pointer">
-                See my work
-                <svg class="ml-2 w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-              </a>
-              <a href="Fares_Mohammed_CV.pdf" target="_blank" class="inline-flex items-center px-5 py-2.5 rounded-lg border border-accent-300 text-accent-600 font-medium text-sm hover:bg-accent-50 transition-colors duration-200 cursor-pointer">
+              <button id="see-my-work" class="inline-flex items-center px-5 py-2.5 rounded-lg bg-midnight text-white font-medium text-sm hover:bg-midnight-light transition-colors duration-200 cursor-pointer">
+                <svg class="mr-1.5 w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                Explore
+              </button>
+              <a href="Fares_Elsherif_CV.pdf" target="_blank" class="inline-flex items-center px-5 py-2.5 rounded-lg border border-accent-300 text-accent-600 font-medium text-sm hover:bg-accent-50 transition-colors duration-200 cursor-pointer">
                 <svg class="mr-1.5 w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
                 Download Resume
               </a>
@@ -170,14 +418,9 @@
               </a>
             </div>
 
-            <div class="mt-8 flex items-center gap-5 text-slate-400 animate-fade-in stagger-4">
-              <div class="flex -space-x-1.5">
-                <span class="px-2 py-0.5 rounded text-[11px] font-mono font-medium bg-slate-100 text-slate-600 border border-slate-200">Embedded</span>
-                <span class="px-2 py-0.5 rounded text-[11px] font-mono font-medium bg-slate-100 text-slate-600 border border-slate-200">IoT</span>
-                <span class="px-2 py-0.5 rounded text-[11px] font-mono font-medium bg-slate-100 text-slate-600 border border-slate-200">C++</span>
-                <span class="px-2 py-0.5 rounded text-[11px] font-mono font-medium bg-slate-100 text-slate-600 border border-slate-200">Arduino</span>
-              </div>
-              <span class="text-xs text-slate-400">Zewail City &middot; CIE &rsquo;29</span>
+            <div class="mt-8 flex flex-wrap items-center gap-x-4 gap-y-1 text-slate-400 animate-fade-in stagger-4">
+              <span class="badge-year inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-100 text-slate-500 text-[11px] font-medium">2nd Year</span>
+              <span class="text-xs text-slate-400">CIE &middot; Zewail City &rsquo;29</span>
             </div>
           </div>
 
@@ -217,7 +460,7 @@
               Most of my projects sit somewhere between hardware and software. I've built traffic light controllers with actual 555 timers, fish farm monitors with real sensors, and irrigation systems you can check from your phone. I like understanding the full stack — from the transistor up to the application layer.
             </p>
             <p>
-              Right now I'm diving deeper into embedded C++, ESP32, control theory, and industrial automation. Looking for an internship where I can learn from people who've been doing this longer than I have.
+              Currently an Embedded Systems Trainee at the National Telecommunication Institute, building on hands-on experience with microcontrollers, sensors, and industrial automation.
             </p>
 
             <div class="flex flex-wrap gap-2 pt-2">
@@ -248,8 +491,8 @@
                 <svg class="w-5 h-5 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path></svg>
               </div>
               <div>
-                <h3 class="font-heading font-semibold text-midnight">Zewail City Career Fair 2026</h3>
-                <p class="text-sm text-slate-500 mt-1">Talked to companies, learned what industry actually looks for, and got a better sense of where I want to head after graduation.</p>
+                <h3 class="font-heading font-semibold text-midnight">ZC Ambassador Team — Team Member</h3>
+                <p class="text-sm text-slate-500 mt-1">Represented the university as an official ambassador, providing guidance, answering inquiries, and fostering a welcoming environment for prospective high school students and guests in university events.</p>
               </div>
             </div>
           </div>
@@ -275,6 +518,47 @@
       </div>
     </section>
 
+    <!-- Experience -->
+    <section id="experience" class="py-24 md:py-32">
+      <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+        <div class="max-w-lg mb-2">
+          <p class="text-accent-500 text-sm font-medium tracking-wider uppercase">Experience</p>
+          <h2 class="font-heading text-3xl md:text-4xl font-bold tracking-tight text-midnight mt-1">
+            Where I've worked
+          </h2>
+        </div>
+
+        <div class="mt-10">
+          <div class="rounded-xl bg-white border border-slate-200 p-6 md:p-8 hover:border-accent-200 transition-all duration-200">
+            <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 mb-4">
+              <div>
+                <h3 class="font-heading font-semibold text-lg text-midnight">Embedded Systems Trainee</h3>
+                <p class="text-sm text-accent-600 font-medium">National Telecommunication Institute — المعهد القومي للاتصالات</p>
+              </div>
+              <span class="text-xs text-slate-400 whitespace-nowrap">Jul 2026 – Present &middot; 1 mo</span>
+            </div>
+            <p class="text-xs text-slate-400 mb-3">Smart Village, Giza, Egypt &middot; On-site</p>
+            <p class="text-sm text-slate-500 mb-4">
+              Selected for the NTI Summer Training Program 2026 in Microcontroller-Based Systems.
+            </p>
+            <ul class="space-y-1.5 text-sm text-slate-600">
+              <li class="flex items-start gap-2"><span class="text-accent-500 mt-0.5">▸</span> C and Embedded C programming</li>
+              <li class="flex items-start gap-2"><span class="text-accent-500 mt-0.5">▸</span> AVR microcontroller architecture</li>
+              <li class="flex items-start gap-2"><span class="text-accent-500 mt-0.5">▸</span> GPIO, ADC, Timers &amp; Interrupts</li>
+              <li class="flex items-start gap-2"><span class="text-accent-500 mt-0.5">▸</span> UART, SPI, and I2C communication protocols</li>
+              <li class="flex items-start gap-2"><span class="text-accent-500 mt-0.5">▸</span> Embedded systems development and simulation using Proteus</li>
+            </ul>
+            <div class="flex flex-wrap gap-2 mt-4">
+              <span class="px-2.5 py-1 rounded-md bg-accent-50 text-accent-600 text-xs font-medium">Embedded C</span>
+              <span class="px-2.5 py-1 rounded-md bg-accent-50 text-accent-600 text-xs font-medium">AVR Microcontroller</span>
+              <span class="px-2.5 py-1 rounded-md bg-accent-50 text-accent-600 text-xs font-medium">Embedded Systems</span>
+              <span class="px-2.5 py-1 rounded-md bg-accent-50 text-accent-600 text-xs font-medium">Proteus</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- Projects -->
     <section id="projects" class="py-24 md:py-32 bg-slate-50/70">
       <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
@@ -291,13 +575,13 @@
         <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-5 mt-10">
 
           <!-- MAWZON Self-Balancing Robot -->
-          <div class="project-card rounded-xl bg-white border border-slate-200 overflow-hidden group cursor-pointer">
+          <div class="project-card rounded-xl bg-white border border-slate-200 overflow-hidden group cursor-pointer" data-repo="MAWZOON---self-balancing-robot">
             <div class="p-6">
               <div class="flex items-center gap-2 mb-4">
-                <span class="px-2 py-0.5 rounded text-[10px] font-mono font-medium bg-accent-50 text-accent-600">Arduino</span>
-                <span class="px-2 py-0.5 rounded text-[10px] font-mono font-medium bg-emerald-50 text-emerald-600">Control</span>
-                <span class="px-2 py-0.5 rounded text-[10px] font-mono font-medium bg-slate-100 text-slate-600">IMU</span>
-                <span class="px-2 py-0.5 rounded text-[10px] font-mono font-medium bg-slate-100 text-slate-600">PID</span>
+                <span class="px-2 py-0.5 rounded text-[11px] sm:text-xs font-mono font-medium bg-accent-50 text-accent-600">Arduino</span>
+                <span class="px-2 py-0.5 rounded text-[11px] sm:text-xs font-mono font-medium bg-emerald-50 text-emerald-600">Control</span>
+                <span class="px-2 py-0.5 rounded text-[11px] sm:text-xs font-mono font-medium bg-slate-100 text-slate-600">IMU</span>
+                <span class="px-2 py-0.5 rounded text-[11px] sm:text-xs font-mono font-medium bg-slate-100 text-slate-600">PID</span>
               </div>
               <h3 class="font-heading font-semibold text-lg text-midnight group-hover:text-accent-600 transition-colors duration-200">MAWZON — Self-Balancing Robot</h3>
               <p class="text-sm text-slate-500 mt-2 leading-relaxed">
@@ -313,13 +597,13 @@
           </div>
 
           <!-- BEITI TECK AI Smart Home -->
-          <div class="project-card rounded-xl bg-white border border-slate-200 overflow-hidden group cursor-pointer">
+          <div class="project-card rounded-xl bg-white border border-slate-200 overflow-hidden group cursor-pointer" data-repo="BEITI-TECK-smart-home">
             <div class="p-6">
               <div class="flex items-center gap-2 mb-4">
-                <span class="px-2 py-0.5 rounded text-[10px] font-mono font-medium bg-accent-50 text-accent-600">ESP32</span>
-                <span class="px-2 py-0.5 rounded text-[10px] font-mono font-medium bg-emerald-50 text-emerald-600">AI</span>
-                <span class="px-2 py-0.5 rounded text-[10px] font-mono font-medium bg-slate-100 text-slate-600">IoT</span>
-                <span class="px-2 py-0.5 rounded text-[10px] font-mono font-medium bg-slate-100 text-slate-600">Blynk</span>
+                <span class="px-2 py-0.5 rounded text-[11px] sm:text-xs font-mono font-medium bg-accent-50 text-accent-600">ESP32</span>
+                <span class="px-2 py-0.5 rounded text-[11px] sm:text-xs font-mono font-medium bg-emerald-50 text-emerald-600">AI</span>
+                <span class="px-2 py-0.5 rounded text-[11px] sm:text-xs font-mono font-medium bg-slate-100 text-slate-600">IoT</span>
+                <span class="px-2 py-0.5 rounded text-[11px] sm:text-xs font-mono font-medium bg-slate-100 text-slate-600">Blynk</span>
               </div>
               <h3 class="font-heading font-semibold text-lg text-midnight group-hover:text-accent-600 transition-colors duration-200">BEITI TECK AI Smart Home</h3>
               <p class="text-sm text-slate-500 mt-2 leading-relaxed">
@@ -334,13 +618,34 @@
             </div>
           </div>
 
-          <!-- Smart Traffic Light -->
-          <div class="project-card rounded-xl bg-white border border-slate-200 overflow-hidden group cursor-pointer">
+          <!-- Fish Farm -->
+          <div class="project-card rounded-xl bg-white border border-slate-200 overflow-hidden group cursor-pointer" data-repo="AquaSmart-Fishfarm-Monitiring-System">
             <div class="p-6">
               <div class="flex items-center gap-2 mb-4">
-                <span class="px-2 py-0.5 rounded text-[10px] font-mono font-medium bg-accent-50 text-accent-600">ESP32</span>
-                <span class="px-2 py-0.5 rounded text-[10px] font-mono font-medium bg-emerald-50 text-emerald-600">Embedded</span>
-                <span class="px-2 py-0.5 rounded text-[10px] font-mono font-medium bg-slate-100 text-slate-600">Digital</span>
+                <span class="px-2 py-0.5 rounded text-[11px] sm:text-xs font-mono font-medium bg-emerald-50 text-emerald-600">IoT</span>
+                <span class="px-2 py-0.5 rounded text-[11px] sm:text-xs font-mono font-medium bg-slate-100 text-slate-600">Hardware</span>
+                <span class="px-2 py-0.5 rounded text-[11px] sm:text-xs font-mono font-medium bg-slate-100 text-slate-600">Signal</span>
+              </div>
+              <h3 class="font-heading font-semibold text-lg text-midnight group-hover:text-accent-600 transition-colors duration-200">AquaSmart — Fish Farm Monitoring System</h3>
+              <p class="text-sm text-slate-500 mt-2 leading-relaxed">
+                Built an IoT water quality monitoring system integrating 4 sensors (temperature, pH, dissolved oxygen, and water flow). Applied digital signal processing techniques to filter raw ADC (Analog-to-Digital Converter) noise, improving sensor data reliability by 22% and enabling consistent 24/7 environmental logging.
+              </p>
+              <div class="mt-4 flex items-center gap-3 text-xs">
+                <a href="https://github.com/s-fares-nabil/AquaSmart-Fishfarm-Monitiring-System" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 text-slate-400 hover:text-accent-600 transition-colors duration-200 cursor-pointer">
+                  <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+                  Source
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Smart Traffic Light -->
+          <div class="project-card rounded-xl bg-white border border-slate-200 overflow-hidden group cursor-pointer" data-repo="Smart-Traffic-Light-System-using-555-Timer-CD4017-ESP32-and-LCD">
+            <div class="p-6">
+              <div class="flex items-center gap-2 mb-4">
+                <span class="px-2 py-0.5 rounded text-[11px] sm:text-xs font-mono font-medium bg-accent-50 text-accent-600">ESP32</span>
+                <span class="px-2 py-0.5 rounded text-[11px] sm:text-xs font-mono font-medium bg-emerald-50 text-emerald-600">Embedded</span>
+                <span class="px-2 py-0.5 rounded text-[11px] sm:text-xs font-mono font-medium bg-slate-100 text-slate-600">Digital</span>
               </div>
               <h3 class="font-heading font-semibold text-lg text-midnight group-hover:text-accent-600 transition-colors duration-200">Smart Traffic Light System</h3>
               <p class="text-sm text-slate-500 mt-2 leading-relaxed">
@@ -355,28 +660,13 @@
             </div>
           </div>
 
-          <!-- Fish Farm -->
-          <div class="project-card rounded-xl bg-white border border-slate-200 overflow-hidden group cursor-pointer">
-            <div class="p-6">
-              <div class="flex items-center gap-2 mb-4">
-                <span class="px-2 py-0.5 rounded text-[10px] font-mono font-medium bg-emerald-50 text-emerald-600">IoT</span>
-                <span class="px-2 py-0.5 rounded text-[10px] font-mono font-medium bg-slate-100 text-slate-600">Hardware</span>
-                <span class="px-2 py-0.5 rounded text-[10px] font-mono font-medium bg-slate-100 text-slate-600">Signal</span>
-              </div>
-              <h3 class="font-heading font-semibold text-lg text-midnight group-hover:text-accent-600 transition-colors duration-200">Multi-Sensor Fish Farm</h3>
-              <p class="text-sm text-slate-500 mt-2 leading-relaxed">
-                Built an IoT water quality monitoring system integrating 4 sensors (temperature, pH, dissolved oxygen, and water flow). Applied digital signal processing techniques to filter raw ADC (Analog-to-Digital Converter) noise, improving sensor data reliability by 22% and enabling consistent 24/7 environmental logging.
-              </p>
-            </div>
-          </div>
-
           <!-- Smart Irrigation -->
-          <div class="project-card rounded-xl bg-white border border-slate-200 overflow-hidden group cursor-pointer">
+          <div class="project-card rounded-xl bg-white border border-slate-200 overflow-hidden group cursor-default">
             <div class="p-6">
               <div class="flex items-center gap-2 mb-4">
-                <span class="px-2 py-0.5 rounded text-[10px] font-mono font-medium bg-accent-50 text-accent-600">Arduino</span>
-                <span class="px-2 py-0.5 rounded text-[10px] font-mono font-medium bg-slate-100 text-slate-600">IoT</span>
-                <span class="px-2 py-0.5 rounded text-[10px] font-mono font-medium bg-slate-100 text-slate-600">Mobile</span>
+                <span class="px-2 py-0.5 rounded text-[11px] sm:text-xs font-mono font-medium bg-accent-50 text-accent-600">Arduino</span>
+                <span class="px-2 py-0.5 rounded text-[11px] sm:text-xs font-mono font-medium bg-slate-100 text-slate-600">IoT</span>
+                <span class="px-2 py-0.5 rounded text-[11px] sm:text-xs font-mono font-medium bg-slate-100 text-slate-600">Mobile</span>
               </div>
               <h3 class="font-heading font-semibold text-lg text-midnight group-hover:text-accent-600 transition-colors duration-200">Smart Irrigation System</h3>
               <p class="text-sm text-slate-500 mt-2 leading-relaxed">
@@ -386,11 +676,11 @@
           </div>
 
           <!-- Circuit Design -->
-          <div class="project-card rounded-xl bg-white border border-slate-200 overflow-hidden group cursor-pointer">
+          <div class="project-card rounded-xl bg-white border border-slate-200 overflow-hidden group cursor-default">
             <div class="p-6">
               <div class="flex items-center gap-2 mb-4">
-                <span class="px-2 py-0.5 rounded text-[10px] font-mono font-medium bg-emerald-50 text-emerald-600">Electronics</span>
-                <span class="px-2 py-0.5 rounded text-[10px] font-mono font-medium bg-slate-100 text-slate-600">Circuit</span>
+                <span class="px-2 py-0.5 rounded text-[11px] sm:text-xs font-mono font-medium bg-emerald-50 text-emerald-600">Electronics</span>
+                <span class="px-2 py-0.5 rounded text-[11px] sm:text-xs font-mono font-medium bg-slate-100 text-slate-600">Circuit</span>
               </div>
               <h3 class="font-heading font-semibold text-lg text-midnight group-hover:text-accent-600 transition-colors duration-200">Circuit Design Portfolio</h3>
               <p class="text-sm text-slate-500 mt-2 leading-relaxed">
@@ -400,43 +690,44 @@
           </div>
 
           <!-- Farm Frenzy -->
-          <div class="project-card rounded-xl bg-white border border-slate-200 overflow-hidden group cursor-pointer">
+          <div class="project-card rounded-xl bg-white border border-slate-200 overflow-hidden group cursor-pointer" data-repo="frenzy-farm-game_work-in-progress">
             <div class="p-6">
               <div class="flex items-center gap-2 mb-4">
-                <span class="px-2 py-0.5 rounded text-[10px] font-mono font-medium bg-accent-50 text-accent-600">C++</span>
-                <span class="px-2 py-0.5 rounded text-[10px] font-mono font-medium bg-slate-100 text-slate-600">OOP</span>
+                <span class="px-2 py-0.5 rounded text-[11px] sm:text-xs font-mono font-medium bg-accent-50 text-accent-600">C++</span>
+                <span class="px-2 py-0.5 rounded text-[11px] sm:text-xs font-mono font-medium bg-slate-100 text-slate-600">OOP</span>
               </div>
               <h3 class="font-heading font-semibold text-lg text-midnight group-hover:text-accent-600 transition-colors duration-200">Farm Frenzy Management</h3>
               <p class="text-sm text-slate-500 mt-2 leading-relaxed">
                 Architected a C++ simulation game in Visual Studio featuring 4 interconnected subsystems for inventory, production, and in-game economy. Leveraged Git for version control and applied strict Object-Oriented Programming (OOP) principles to manage over 1,200 lines of code, achieving a stable 60 FPS core game loop.
               </p>
               <div class="mt-4 flex items-center gap-3 text-xs">
-                <a href="https://github.com/s-fares-nabil" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 text-slate-400 hover:text-accent-600 transition-colors duration-200 cursor-pointer">
+                <a href="https://github.com/s-fares-nabil/frenzy-farm-game_work-in-progress" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 text-slate-400 hover:text-accent-600 transition-colors duration-200 cursor-pointer">
                   <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
-                  GitHub
+                  Source
                 </a>
               </div>
             </div>
           </div>
 
           <!-- Interactive Adventure -->
-          <div class="project-card rounded-xl bg-white border border-slate-200 overflow-hidden group cursor-pointer">
+          <div class="project-card rounded-xl bg-white border border-slate-200 overflow-hidden group cursor-pointer" data-repo="Interactive-Adventure-Game">
             <div class="p-6">
               <div class="flex items-center gap-2 mb-4">
-                <span class="px-2 py-0.5 rounded text-[10px] font-mono font-medium bg-accent-50 text-accent-600">Python</span>
-                <span class="px-2 py-0.5 rounded text-[10px] font-mono font-medium bg-slate-100 text-slate-600">GUI</span>
+                <span class="px-2 py-0.5 rounded text-[11px] sm:text-xs font-mono font-medium bg-accent-50 text-accent-600">Python</span>
+                <span class="px-2 py-0.5 rounded text-[11px] sm:text-xs font-mono font-medium bg-slate-100 text-slate-600">GUI</span>
               </div>
               <h3 class="font-heading font-semibold text-lg text-midnight group-hover:text-accent-600 transition-colors duration-200">Interactive Adventure Game</h3>
               <p class="text-sm text-slate-500 mt-2 leading-relaxed">
                 Programmed a dynamic Python text adventure featuring a custom-built GUI and 12 unique branching storylines. Implemented robust state management logic to track user decisions in real-time, successfully handling 45 different state variables to navigate the user across 8 distinct game endings.
               </p>
               <div class="mt-4 flex items-center gap-3 text-xs">
-                <a href="https://github.com/s-fares-nabil" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 text-slate-400 hover:text-accent-600 transition-colors duration-200 cursor-pointer">
+                <a href="https://github.com/s-fares-nabil/Interactive-Adventure-Game" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 text-slate-400 hover:text-accent-600 transition-colors duration-200 cursor-pointer">
                   <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
-                  GitHub
+                  Source
                 </a>
               </div>
             </div>
+          </div>
         </div>
       </div>
     </section>
@@ -460,6 +751,8 @@
           <span class="px-3 py-1 rounded-md bg-white border border-accent-200 text-xs font-medium text-accent-700">IMU / MPU6050</span>
           <span class="px-3 py-1 rounded-md bg-white border border-accent-200 text-xs font-medium text-accent-700">Control Systems</span>
           <span class="px-3 py-1 rounded-md bg-white border border-accent-200 text-xs font-medium text-accent-700">Industrial Automation</span>
+          <span class="px-3 py-1 rounded-md bg-white border border-accent-200 text-xs font-medium text-accent-700">System Design</span>
+          <span class="px-3 py-1 rounded-md bg-white border border-accent-200 text-xs font-medium text-accent-700">Real-Time Systems</span>
           <span class="px-3 py-1 rounded-md bg-white border border-accent-200 text-xs font-medium text-accent-700">Circuit Design</span>
         </div>
 
@@ -478,7 +771,8 @@
             <p class="text-xs font-medium text-slate-400 tracking-wider uppercase">Hardware &amp; Protocols</p>
             <div class="flex flex-wrap gap-2">
               <span class="px-3 py-1.5 rounded-md bg-slate-50 border border-slate-200 text-sm text-slate-700">ESP32</span>
-              <span class="px-3 py-1.5 rounded-md bg-slate-50 border border-slate-200 text-sm text-slate-700">Arduino</span>
+              <span class="px-3 py-1.5 rounded-md bg-slate-50 border border-slate-200 text-sm text-slate-700">AVR</span>
+              <span class="px-3 py-1.5 rounded-md bg-slate-50 border border-slate-200 text-sm text-slate-700">Microcontrollers</span>
               <span class="px-3 py-1.5 rounded-md bg-slate-50 border border-slate-200 text-sm text-slate-700">I2C</span>
               <span class="px-3 py-1.5 rounded-md bg-slate-50 border border-slate-200 text-sm text-slate-700">SPI</span>
               <span class="px-3 py-1.5 rounded-md bg-slate-50 border border-slate-200 text-sm text-slate-700">UART</span>
@@ -487,14 +781,13 @@
               <span class="px-3 py-1.5 rounded-md bg-slate-50 border border-slate-200 text-sm text-slate-700">MPU6050</span>
               <span class="px-3 py-1.5 rounded-md bg-slate-50 border border-slate-200 text-sm text-slate-700">H-Bridge</span>
               <span class="px-3 py-1.5 rounded-md bg-slate-50 border border-slate-200 text-sm text-slate-700">GPIO</span>
-              <span class="px-3 py-1.5 rounded-md bg-slate-50 border border-slate-200 text-sm text-slate-700">NE555</span>
-              <span class="px-3 py-1.5 rounded-md bg-slate-50 border border-slate-200 text-sm text-slate-700">CD4017</span>
             </div>
           </div>
           <div class="space-y-3">
             <p class="text-xs font-medium text-slate-400 tracking-wider uppercase">Tools</p>
             <div class="flex flex-wrap gap-2">
               <span class="px-3 py-1.5 rounded-md bg-slate-50 border border-slate-200 text-sm text-slate-700">Git</span>
+              <span class="px-3 py-1.5 rounded-md bg-slate-50 border border-slate-200 text-sm text-slate-700">Proteus</span>
               <span class="px-3 py-1.5 rounded-md bg-slate-50 border border-slate-200 text-sm text-slate-700">VS</span>
               <span class="px-3 py-1.5 rounded-md bg-slate-50 border border-slate-200 text-sm text-slate-700">Multimeter</span>
               <span class="px-3 py-1.5 rounded-md bg-slate-50 border border-slate-200 text-sm text-slate-700">Breadboard</span>
@@ -526,47 +819,6 @@
       </div>
     </section>
 
-    <!-- Awards -->
-    <section id="awards" class="py-24 md:py-32 bg-white">
-      <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        <p class="text-accent-500 text-sm font-medium tracking-wider uppercase mb-1">Achievements</p>
-        <h2 class="font-heading text-3xl md:text-4xl font-bold tracking-tight text-midnight">
-          Awards &amp; Recognition
-        </h2>
-
-        <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-10">
-          <div class="rounded-xl bg-slate-50 border border-slate-200 p-5 hover:border-accent-200 hover:bg-accent-50/30 transition-all duration-200">
-            <div class="w-10 h-10 rounded-lg bg-accent-100 flex items-center justify-center mb-3">
-              <svg class="w-5 h-5 text-accent-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
-            </div>
-            <h3 class="font-heading font-semibold text-midnight">IEEE Student Member</h3>
-            <p class="text-xs text-slate-500 mt-1">Active member at Zewail City IEEE Student Branch. Hands-on embedded workshops and engineering challenges.</p>
-          </div>
-          <div class="rounded-xl bg-slate-50 border border-slate-200 p-5 hover:border-emerald-200 hover:bg-emerald-50/30 transition-all duration-200">
-            <div class="w-10 h-10 rounded-lg bg-emerald-100 flex items-center justify-center mb-3">
-              <svg class="w-5 h-5 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg>
-            </div>
-            <h3 class="font-heading font-semibold text-midnight">DECI Graduate</h3>
-            <p class="text-xs text-slate-500 mt-1">Digital Egypt Cubs Initiative by Ministry of Communications (MCIT). 2024.</p>
-          </div>
-          <div class="rounded-xl bg-slate-50 border border-slate-200 p-5 hover:border-accent-200 hover:bg-accent-50/30 transition-all duration-200">
-            <div class="w-10 h-10 rounded-lg bg-accent-100 flex items-center justify-center mb-3">
-              <svg class="w-5 h-5 text-accent-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
-            </div>
-            <h3 class="font-heading font-semibold text-midnight">NTI Cybersecurity Basics</h3>
-            <p class="text-xs text-slate-500 mt-1">National Telecommunications Institute. Foundations of cybersecurity. 2024.</p>
-          </div>
-          <div class="rounded-xl bg-slate-50 border border-slate-200 p-5 hover:border-amber-200 hover:bg-amber-50/30 transition-all duration-200">
-            <div class="w-10 h-10 rounded-lg bg-amber-100 flex items-center justify-center mb-3">
-              <svg class="w-5 h-5 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
-            </div>
-            <h3 class="font-heading font-semibold text-midnight">Zewail City STEM Projects</h3>
-            <p class="text-xs text-slate-500 mt-1">6+ engineering projects built at Zewail City — embedded systems, IoT, circuits, and automation.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
     <!-- Contact -->
     <section id="contact" class="py-24 md:py-32">
       <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
@@ -576,8 +828,7 @@
             Let's build something together
           </h2>
           <p class="mt-4 text-slate-500 leading-relaxed">
-            Looking for an internship where I can build real things and learn from engineers who know their stuff.
-            If that sounds like your team, let's talk.
+            If you're working on interesting problems in embedded systems, automation, or control — let's talk.
           </p>
         </div>
 
@@ -639,6 +890,37 @@
     </div>
   </footer>
 
+<button id="term-launcher" aria-label="Open terminal menu">
+  <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+</button>
+<div id="terminal">
+  <div class="term-header">
+    <span class="term-dots">
+      <span class="term-dot red"></span>
+      <span class="term-dot yellow"></span>
+      <span class="term-dot green"></span>
+    </span>
+    <span class="term-title">fares@portfolio:~</span>
+  </div>
+  <div class="term-body" id="term-body"></div>
+</div>
+
+
+<div id="project-modal">
+  <div class="modal-panel">
+    <div class="modal-header">
+      <a id="modal-repo-link" href="#" target="_blank" rel="noopener noreferrer">
+        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+        <span id="modal-repo-name">View on GitHub</span>
+      </a>
+      <button class="modal-close" id="modal-close">&times;</button>
+    </div>
+    <div class="modal-body" id="modal-body">
+      <div class="loading">Loading README...</div>
+    </div>
+  </div>
+</div>
+
   <script>
     const navbar = document.getElementById('navbar');
     window.addEventListener('scroll', () => {
@@ -655,12 +937,14 @@
       const isOpen = !mobileMenu.classList.toggle('hidden');
       mobileMenuBtn.setAttribute('aria-expanded', isOpen);
     });
-    mobileMenu.querySelectorAll('a').forEach(link => {
-      link.addEventListener('click', () => {
-        mobileMenu.classList.add('hidden');
-        mobileMenuBtn.setAttribute('aria-expanded', 'false');
+    if (mobileMenu) {
+      mobileMenu.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => {
+          mobileMenu.classList.add('hidden');
+          mobileMenuBtn.setAttribute('aria-expanded', 'false');
+        });
       });
-    });
+    }
 
     const skillObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
@@ -686,6 +970,264 @@
         l.classList.toggle('active', l.getAttribute('href') === '#' + current);
       });
     }, { passive: true });
+
+    function setTheme(dark) {
+      if (dark) {
+        document.documentElement.classList.add('dark');
+        document.getElementById('sun-icon')?.classList.remove('hidden');
+        document.getElementById('moon-icon')?.classList.add('hidden');
+        document.getElementById('sun-icon-mobile')?.classList.remove('hidden');
+        document.getElementById('moon-icon-mobile')?.classList.add('hidden');
+      } else {
+        document.documentElement.classList.remove('dark');
+        document.getElementById('sun-icon')?.classList.add('hidden');
+        document.getElementById('moon-icon')?.classList.remove('hidden');
+        document.getElementById('sun-icon-mobile')?.classList.add('hidden');
+        document.getElementById('moon-icon-mobile')?.classList.remove('hidden');
+      }
+      localStorage.setItem('dark-mode', dark ? 'true' : 'false');
+    }
+
+    if (localStorage.getItem('dark-mode') === 'true' ||
+        (!localStorage.getItem('dark-mode') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      setTheme(true);
+    }
+
+    document.getElementById('theme-toggle')?.addEventListener('click', () => setTheme(!document.documentElement.classList.contains('dark')));
+    document.getElementById('theme-toggle-mobile')?.addEventListener('click', () => setTheme(!document.documentElement.classList.contains('dark')));
+
+    const terminal = document.getElementById('terminal');
+    const termBody = document.getElementById('term-body');
+    const termHint = document.getElementById('term-hint');
+    let termOpen = false;
+
+    function termPrint(text, cls = 'output') {
+      const div = document.createElement('div');
+      div.className = 'term-line ' + cls;
+      div.innerHTML = text;
+      termBody.appendChild(div);
+      termBody.scrollTop = termBody.scrollHeight;
+    }
+
+    function termClear() { termBody.innerHTML = ''; }
+
+    function showMenu() {
+      const menu = document.createElement('div');
+      menu.className = 'term-menu';
+      const items = [
+        { label: 'About Me', key: 'about', desc: 'scrolls to About section' },
+        { label: 'Experience', key: 'experience', desc: 'scrolls to Experience section' },
+        { label: 'Skills', key: 'skills', desc: 'scrolls to Skills section' },
+        { label: 'Projects', key: 'projects', desc: 'scrolls to Projects section' },
+        { label: 'Contact', key: 'contact', desc: 'scrolls to Contact section' },
+        { label: 'GitHub', key: 'github', desc: 'opens in new tab' },
+        { label: 'LinkedIn', key: 'linkedin', desc: 'opens in new tab' },
+        { label: 'Close', key: 'close', desc: 'Exit the terminal' },
+      ];
+      items.forEach(item => {
+        const btn = document.createElement('button');
+        btn.className = 'term-menu-item';
+        btn.innerHTML = `<span class="arrow">▸</span> ${item.label} <span style="color:#64748B;font-size:11px;margin-left:8px">${item.desc}</span>`;
+        btn.addEventListener('click', () => handleMenuClick(item.key));
+        menu.appendChild(btn);
+      });
+      termBody.appendChild(menu);
+      termBody.scrollTop = termBody.scrollHeight;
+    }
+
+    function handleMenuClick(key) {
+      termOpen = false;
+      terminal.classList.remove('open');
+      const targets = {
+        about: 'about', experience: 'experience', skills: 'skills', projects: 'projects',
+        contact: 'contact', github: 'github',
+        linkedin: 'contact',
+      };
+      if (key === 'close') return;
+      if (key === 'github') { window.open('https://github.com/s-fares-nabil', '_blank'); return; }
+      if (key === 'linkedin') { window.open('https://www.linkedin.com/in/fares-elsherif-123945378', '_blank'); return; }
+      const id = targets[key];
+      if (id) document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function openTerminal() {
+      termClear();
+      termPrint('<span style="font-weight:bold">▌ FARES ELSHERIF — PORTFOLIO TERMINAL</span>', '');
+      termPrint('Pick an option below:', 'output');
+      showMenu();
+      termOpen = true;
+      terminal.classList.add('open');
+      termHint.classList.remove('show');
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && termOpen) {
+        e.preventDefault();
+        termOpen = false;
+        terminal.classList.remove('open');
+        termHint.classList.remove('show');
+      }
+    });
+
+    document.getElementById('see-my-work')?.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (termOpen) {
+        termOpen = false;
+        terminal.classList.remove('open');
+      } else {
+        openTerminal();
+      }
+    });
+
+    document.getElementById('term-launcher')?.addEventListener('click', () => {
+      if (termOpen) {
+        termOpen = false;
+        terminal.classList.remove('open');
+      } else {
+        openTerminal();
+      }
+    });
+
+    setTimeout(() => termHint.classList.add('show'), 3000);
+    setTimeout(() => termHint.classList.remove('show'), 10000);
+
+    const canvas = document.getElementById('particle-canvas');
+    if (canvas) {
+      const ctx = canvas.getContext('2d');
+      let particles = [];
+      let animId;
+
+      function resizeCanvas() {
+        const hero = canvas.closest('section');
+        if (hero) {
+          canvas.width = hero.offsetWidth;
+          canvas.height = hero.offsetHeight;
+        }
+      }
+
+      class Particle {
+        constructor() { this.reset(); }
+        reset() {
+          this.x = Math.random() * canvas.width;
+          this.y = Math.random() * canvas.height;
+          this.vx = (Math.random() - 0.5) * 0.6;
+          this.vy = (Math.random() - 0.5) * 0.6;
+          this.r = Math.random() * 1.5 + 0.5;
+        }
+        update() {
+          this.x += this.vx; this.y += this.vy;
+          if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+          if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+        }
+        draw() {
+          ctx.beginPath(); ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+          ctx.fillStyle = document.documentElement.classList.contains('dark') ? 'rgba(96, 165, 250, 0.3)' : 'rgba(37, 99, 235, 0.8)';
+          ctx.fill();
+        }
+      }
+
+      function initParticles() {
+        const count = Math.min(60, Math.floor(canvas.width * canvas.height / 12000));
+        particles = Array.from({ length: count }, () => new Particle());
+      }
+
+      function drawLines() {
+        for (let i = 0; i < particles.length; i++) {
+          for (let j = i + 1; j < particles.length; j++) {
+            const dx = particles[i].x - particles[j].x;
+            const dy = particles[i].y - particles[j].y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < 150) {
+              ctx.beginPath(); ctx.moveTo(particles[i].x, particles[i].y);
+              ctx.lineTo(particles[j].x, particles[j].y);
+              ctx.strokeStyle = document.documentElement.classList.contains('dark')
+                ? `rgba(96, 165, 250, ${0.08 * (1 - dist / 150)})`
+                : `rgba(37, 99, 235, ${0.5 * (1 - dist / 150)})`;
+              ctx.lineWidth = 0.6; ctx.stroke();
+            }
+          }
+        }
+      }
+
+      function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particles.forEach(p => { p.update(); p.draw(); });
+        drawLines();
+        animId = requestAnimationFrame(animate);
+      }
+
+      window.addEventListener('resize', () => { resizeCanvas(); initParticles(); });
+      resizeCanvas(); initParticles(); animate();
+    }
+
+    document.querySelectorAll('.project-card').forEach(card => {
+      const links = card.querySelectorAll('a');
+      links.forEach(l => l.addEventListener('click', e => e.stopPropagation()));
+      const repo = card.dataset.repo;
+      if (!repo) return;
+      card.addEventListener('click', () => openProjectModal(repo));
+    });
+
+    const modal = document.getElementById('project-modal');
+    const modalBody = document.getElementById('modal-body');
+    const modalRepoLink = document.getElementById('modal-repo-link');
+    const modalRepoName = document.getElementById('modal-repo-name');
+    function closeModal() {
+      modal.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    document.getElementById('modal-close').addEventListener('click', closeModal);
+    modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+    function openProjectModal(repo) {
+      modalRepoLink.href = `https://github.com/s-fares-nabil/${repo}`;
+      modalRepoName.textContent = repo;
+      modalBody.innerHTML = '<div class="loading">Loading README...</div>';
+      modal.classList.add('open');
+      document.body.style.overflow = 'hidden';
+      fetch(`https://api.github.com/repos/s-fares-nabil/${repo}/readme`)
+        .then(r => { if (!r.ok) throw new Error('Not found'); return r.json(); })
+        .then(data => {
+          const binary = atob(data.content);
+          const bytes = new Uint8Array(binary.length);
+          for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+          const markdown = new TextDecoder('utf-8').decode(bytes);
+          modalBody.innerHTML = renderReadme(markdown, repo);
+        })
+        .catch(() => {
+          modalBody.innerHTML = '<div class="loading">README not available.</div>';
+        });
+    }
+
+    function renderReadme(md, repo) {
+      if (typeof marked === 'undefined') {
+        return '<div class="loading">Markdown parser not loaded. <a href="' + modalRepoLink.href + '" target="_blank">View on GitHub</a></div>';
+      }
+      const rawBase = `https://raw.githubusercontent.com/s-fares-nabil/${repo}/master/`;
+      const rendered = marked.parse(md, { gfm: true });
+      const div = document.createElement('div');
+      div.innerHTML = rendered;
+      div.querySelectorAll('img').forEach(img => {
+        const src = img.getAttribute('src') || '';
+        if (src && !src.startsWith('http')) {
+          img.setAttribute('src', rawBase + src);
+        }
+        img.classList.add('readme-img');
+      });
+      div.querySelectorAll('a').forEach(a => {
+        const href = a.getAttribute('href') || '';
+        if (href && !href.startsWith('http') && !href.startsWith('#')) {
+          a.setAttribute('href', rawBase + href);
+        }
+        if (a.href.startsWith('http')) a.target = '_blank';
+      });
+      div.querySelectorAll('table').forEach(t => t.classList.add('readme-table'));
+      div.querySelectorAll('pre').forEach(p => p.classList.add('readme-pre'));
+      div.querySelectorAll('h1, h2, h3, h4').forEach(h => h.classList.add('readme-heading'));
+      return div.innerHTML;
+    }
+
   </script>
 </body>
 </html>
